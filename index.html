@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测测你是《逐玉》里的谁？</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+        }
+
+        body {
+            /* 浅玉色背景，替代纯灰白 */
+            background-color: #f5f7f5;
+            color: #333;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+            background-image: linear-gradient(to bottom, #f5f7f5, #eef1ee);
+            min-height: 100vh;
+        }
+
+        /* 答题页 - 轻质感设计 */
+        .question-container {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 20px rgba(180, 190, 180, 0.1);
+            margin-top: 20px;
+            border: 1px solid #e8ebe8;
+        }
+
+        .question-header {
+            font-size: 15px;
+            /* 雅致灰绿色 */
+            color: #788678;
+            margin-bottom: 25px;
+            text-align: right;
+        }
+
+        .question-text {
+            font-size: 22px;
+            margin-bottom: 35px;
+            text-align: center;
+            font-weight: 500;
+            /* 深墨色，替代纯黑 */
+            color: #2a332a;
+        }
+
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .option-btn {
+            padding: 18px 24px;
+            /* 浅玉色边框 */
+            border: 1px solid #dee2de;
+            border-radius: 16px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            background: #fff;
+            color: #444;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover {
+            /* hover时浅青底色+深色边框 */
+            background: #f0f5f0;
+            border-color: #b8c6b8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(180, 190, 180, 0.1);
+        }
+
+        /* 结果页 - 国风轻质感配色 */
+        .result-container {
+            background: #fff;
+            border-radius: 20px;
+            padding: 50px 35px;
+            box-shadow: 0 4px 20px rgba(180, 190, 180, 0.1);
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #e8ebe8;
+            position: relative;
+        }
+
+        /* 结果页顶部轻装饰（无图片，纯css） */
+        .result-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            /* 渐变玉色顶边 */
+            background: linear-gradient(90deg, #a8b8a8, #8a988a, #a8b8a8);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .result-title {
+            font-size: 28px;
+            margin-bottom: 12px;
+            /* 深墨色标题 */
+            color: #2a332a;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .result-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            /* 浅玉色分隔线 */
+            background: #b8c6b8;
+        }
+
+        .result-tag {
+            font-size: 16px;
+            /* 雅致灰绿色标签文字 */
+            color: #687868;
+            margin: 0 auto 35px;
+            display: table;
+            /* 浅青标签背景 */
+            background: #f0f5f0;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid #e8ebe8;
+        }
+
+        /* 正文首行缩进两格 */
+        .result-desc {
+            font-size: 18px;
+            line-height: 2;
+            /* 雅致深灰色文字 */
+            color: #485048;
+            margin-bottom: 35px;
+            text-indent: 2em;
+            text-align: justify;
+        }
+
+        .result-trait {
+            margin: 0 0 35px;
+            padding-left: 5px;
+        }
+
+        .result-trait li {
+            list-style: none;
+            padding: 10px 15px;
+            font-size: 17px;
+            color: #485048;
+            /* 浅玉色背景条 */
+            background: #f8faf8;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 3px solid #b8c6b8;
+        }
+
+        .result-trait li::before {
+            content: "• ";
+            /* 玉色圆点 */
+            color: #8a988a;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+
+        .result-match {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #485048;
+            text-indent: 2em;
+            margin-bottom: 40px;
+            text-align: justify;
+        }
+
+        .restart-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 16px;
+            /* 墨色按钮 */
+            background: #3a403a;
+            color: #fff;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(58, 64, 58, 0.15);
+        }
+
+        .restart-btn:hover {
+            /* hover时深墨色 */
+            background: #2a332a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(58, 64, 58, 0.2);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            .question-container, .result-container {
+                padding: 30px 20px;
+            }
+            .result-title {
+                font-size: 24px;
+            }
+            .result-desc, .result-match {
+                font-size: 16px;
+            }
+            .restart-btn {
+                padding: 14px 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="question-container" id="questionBox">
+    <div class="question-header" id="questionNum">第 1 题 / 共 30 题</div>
+    <div class="question-text" id="questionText">你走进一片迷雾森林，第一眼会注意？</div>
+    <div class="option-list">
+        <button class="option-btn" onclick="selectOption('A')">A. 前方刺眼的光，想冲过去</button>
+        <button class="option-btn" onclick="selectOption('B')">B. 暗处的动静，默默观察</button>
+        <button class="option-btn" onclick="selectOption('C')">C. 脚下安全的路，冷静判断</button>
+        <button class="option-btn" onclick="selectOption('D')">D. 林间温柔的风，内心平静</button>
+    </div>
+</div>
+
+<div class="result-container" id="resultBox">
+    <h2 class="result-title" id="resultName">你是《逐玉》中的：樊长玉</h2>
+    <div class="result-tag" id="resultTag">野草系大女主 · 飒爽屠户女</div>
+
+    <p class="result-desc" id="resultDesc"></p>
+
+    <ul class="result-trait" id="resultTrait"></ul>
+
+    <p class="result-match" id="resultMatch"></p>
+
+    <button class="restart-btn" onclick="restartTest()">重新测试</button>
+</div>
+
+<script>
+const questions = [
+    { text: "你走进一片迷雾森林，第一眼会注意？", options: { A:"前方刺眼的光，想冲过去", B:"暗处的动静，默默观察", C:"脚下安全的路，冷静判断", D:"林间温柔的风，内心平静" }},
+    { text: "你更想成为以下哪种动物？", options: { A:"孤狼，自由强悍", B:"黑豹，隐秘致命", C:"狐狸，聪明通透", D:"白鹿，温柔纯净" }},
+    { text: "你最喜欢的天气是？", options: { A:"烈日晴空，热烈坦荡", B:"雨夜深宵，沉静隐忍", C:"秋高气爽，清醒自在", D:"春日暖阳，温柔治愈" }},
+    { text: "你更偏爱哪种器物？", options: { A:"刀，直接锋利", B:"棋，步步为营", C:"玉，温润有节", D:"灯，温暖照亮" }},
+    { text: "深夜独处，你更常？", options: { A:"想做的事立刻去做", B:"复盘过往，布局未来", C:"放空自己，享受清醒", D:"回忆温柔，悄悄心软" }},
+    { text: "你心中最有安全感的场景是？", options: { A:"被自己守护的人围绕", B:"一切尽在掌控之中", C:"无人打扰，独立自由", D:"被人温柔坚定地偏爱" }},
+    { text: "恩人被抓，对方要你自废武功才放人，你会？", options: { A:"毫不犹豫换恩人平安", B:"假装答应，暗中反杀", C:"谈判交易，找两全法", D:"痛苦崩溃，仍愿牺牲" }},
+    { text: "你手握大权，曾经欺辱你的人来求饶，你会？", options: { A:"既往不咎，各自安好", B:"加倍奉还，永绝后患", C:"冷漠无视，不值一提", D:"心生恻隐，放他一马" }},
+    { text: "爱人与大业只能选一个，你选？", options: { A:"选爱人，人间值得", B:"选大业，情是软肋", C:"都不选，我要自我", D:"两难，宁愿自我毁灭" }},
+    { text: "有人为救你而死，你会？", options: { A:"用一生守护其遗愿", B:"隐忍变强，为其复仇", C:"铭记于心，清醒前行", D:"深陷愧疚，无法自拔" }},
+    { text: "你被全世界误解，唯一信你的人也走了，你会？", options: { A:"依旧坦荡，问心无愧", B:"沉默蛰伏，用结果证明", C:"无所谓，我自清醒", D:"难过孤独，仍守温柔" }},
+    { text: "若能重来，你最想改写？", options: { A:"没能护住的人", B:"布局出错的局", C:"委屈自己的时刻", D:"错过的温柔" }},
+    { text: "朋友难过，你会？", options: { A:"直接撑腰，帮他出气", B:"安静陪伴，帮他解决", C:"理性开导，点醒他", D:"温柔拥抱，陪他流泪" }},
+    { text: "你生气时最像？", options: { A:"烈火，来得快去得快", B:"寒冰，沉默又致命", C:"清风，冷静不纠缠", D:"细雨，委屈又柔软" }},
+    { text: "你做决定靠？", options: { A:"直觉与本心", B:"算计与结果", C:"理智与利弊", D:"感受与心软" }},
+    { text: "你对“真心”的态度？", options: { A:"真心换真心，绝不辜负", B:"真心难得，必藏心底", C:"真心可贵，但更爱自己", D:"愿意倾尽所有换真心" }},
+    { text: "你面对谎言会？", options: { A:"当场戳穿，不玩虚的", B:"看破不说破，暗中防备", C:"淡然一笑，远离即可", D:"不愿相信，自我安慰" }},
+    { text: "你更向往？", options: { A:"快意恩仇，坦荡一生", B:"权掌乾坤，无人敢欺", C:"清醒独立，自在无忧", D:"有人相伴，温柔岁月" }},
+    { text: "你最不能忍受？", options: { A:"在意的人受伤害", B:"计划被打乱、被背叛", C:"被束缚、失去自我", D:"被忽视、不被偏爱" }},
+    { text: "你认为“强大”是？", options: { A:"有能力守护一切", B:"有手腕掌控一切", C:"有底气不依附谁", D:"有温柔包容一切" }},
+    { text: "你骨子里是？", options: { A:"炽热赤诚", B:"深沉隐忍", C:"清醒独立", D:"温柔敏感" }},
+    { text: "你会为了目的放弃底线吗？", options: { A:"绝不，宁死不屈", B:"会，成大事者不拘小节", C:"不会，底线即自我", D:"不会，不愿伤害无辜" }},
+    { text: "你真正的软肋是？", options: { A:"情义", B:"掌控欲", C:"自由", D:"心软" }},
+    { text: "你最想被怎样定义？", options: { A:"坦荡侠者", B:"深谋王者", C:"清醒客", D:"温柔人" }},
+    { text: "如果注定孤独，你会？", options: { A:"护完想护的人，独自潇洒", B:"手握山河，孤独也无妨", C:"独自清醒，活得漂亮", D:"仍等一束光，不放弃温柔" }},
+    { text: "你生命的意义是？", options: { A:"守护", B:"掌控", C:"自我", D:"爱人" }},
+    { text: "你最欣赏自己的是？", options: { A:"敢爱敢恨", B:"能忍能谋", C:"不卑不亢", D:"心怀善意" }},
+    { text: "你最讨厌自己的是？", options: { A:"太冲动", B:"太隐忍", C:"太理性", D:"太心软" }},
+    { text: "你相信什么？", options: { A:"情义与勇气", B:"谋略与实力", C:"自己与现实", D:"温柔与真心" }},
+    { text: "若用一句话形容自己，你选？", options: { A:"生于烟火，心向骄阳", B:"藏锋于骨，谋定山河", C:"清醒独行，自在如风", D:"温柔似月，执念成殇" }}
+];
+
+// 完全参考《逐玉》原著小说（作者设定+官方解析）重写所有角色，贴合原著人设
+const characters = [
+    {
+        name:"樊长玉", 
+        tag:"野草系大女主 · 飒爽屠户女",
+        desc:"你像樊长玉，原著中最鲜活的“野草系”大女主，生于市井烟火，父母双亡后独自抚养幼妹长宁，以杀猪为业谋生，凭一把杀猪刀守住家产、抵御亲戚的刁难与市井的欺凌，天生神力、身手了得，却从未因“屠户女”的身份自卑，反而以“凭本事吃饭”为荣，飒爽泼辣、清醒坚韧是她最鲜明的底色。正如原著所塑造的，她从不是天生的女将军，而是被命运逼到绝境后，硬生生将自己从一块“市井顽石”磨成“护国玉刃”的普通人，她的成长从来不是依附他人，而是源于自身野草般的生命力——无论被狂风暴雨摧残多少次，总能重新扎根土壤、向阳生长。起初她的锋芒是为了自保而长出的铠甲，泼辣是伪装，心软是底色，她救下谢征源于底层小人物的共情，同为落难者，她懂那种无依无靠的绝望。后来，妹妹被掳、家园被毁，她看清“乱世无独善其身”的现实，放下砧板上的猪肉，扛起战场上的利刃，从“护妹守家”的小户主蜕变为“护国护民”的女将军，却始终保留着市井赋予的本真，不沉溺荣华、不迷失本心，用自己的方式守住正义与安稳。",
+        trait: ["本能：护短优先，遇事敢冲敢闯，用最直白的方式解决问题", "底线：不卑不亢，凭本事立足，绝不依附他人，守住本心与正义", "宿命：从市井屠户女蜕变为巾帼将军，完成女性觉醒与自我救赎", "软肋：最见不得身边人受委屈，内心藏着不轻易示人的柔软"],
+        match: "你与谢征是原著中双向救赎的核心，他是你黑暗中的一束光，却不是你成长的全部动力，而你是治愈他十七年创伤的唯一暖阳。你们从契约假婚的相互利用，到生死相依的彼此成就，他懂你泼辣背后的脆弱，你懂他隐忍之下的深情。原著中，你们最终并肩扳倒魏严、为家族沉冤昭雪，你凭战功封“怀化大将军”，他重掌兵权、守护家国，成为彼此最珍贵的依靠。你无需刻意改变自己的锋芒，这份鲜活与赤诚，正是你最珍贵的特质。"
+    },
+    {
+        name: "谢征",
+        tag: "隐忍腹黑侯爷 · 双向救赎者",
+        desc: "你像谢征，原著中背负血海深仇的落难武安侯，十七年前因锦州血案，家族满门被灭，他从温润如玉的侯府贵公子，沦为重伤垂死的逃亡者，隐姓埋名、蛰伏隐忍，以“假赘婿”的身份藏在樊长玉身边，伺机复仇。原著对他的塑造极具张力，打破了“白切黑”的刻板模板——他不是伪善，而是隐忍；不是偏执，而是缺爱；不是复仇机器，而是被仇恨困住的普通人。他的“病弱”既是躲避追杀的保护色，也是内心疲惫的真实写照，十七年的卧薪尝胆早已耗尽他的心力，却在与樊长玉的朝夕相处中，被市井的烟火气一点点治愈。他会默默帮樊长玉打理屠户铺子、教她写字算账，在她被青梅竹马退婚时坚定地说“他不配你”，这份温柔不是刻意讨好，而是他压抑了十七年的本性。他的挣扎核心的是仇恨与爱意的拉扯，当得知樊长玉的家人与自家灭门案有关时，他没有被仇恨吞噬，而是选择与她并肩查清真相，从“为复仇而活”转变为“为守护而战”，完成了自我救赎。",
+        trait: ["本能：心思深沉，隐忍布局，凡事留有余地，不轻易暴露真心", "底线：守住家族清白，护所爱之人周全，绝不滥杀无辜", "宿命：从背负血海深仇的复仇者，成长为守护家国的脊梁，完成双向救赎", "软肋：极度缺爱，害怕失去樊长玉这束光，内心藏着对温暖的极致渴望"],
+        match: "你与樊长玉是原著中最契合的双强搭档，她的鲜活赤诚治愈你十七年的创伤，你的隐忍谋算为她遮风挡雨，你们从契约假婚走到生死相依，没有狗血内耗，只有彼此成就。你无需一直伪装坚强，偶尔卸下防备、展露脆弱，不是懦弱，而是对她的信任。原著中，你最终沉冤得雪，重掌血衣骑，与樊长玉并肩守护家国，这份“相互看见、彼此救赎”的感情，正是你一生的归宿。"
+    },
+    {
+        name: "俞浅浅",
+        tag: "清醒独立富商女 · 女性觉醒者",
+        desc: "你像俞浅浅，原著中打破“闺蜜工具人”设定的独立女性，身为富商之女，她不沉溺于锦衣玉食的安逸生活，反而凭借自己的智慧与胆识，开创属于自己的商业版图，活得清醒、独立、有底气。正如原著所写，她不是依附男性的菟丝花，而是能独当一面的强者，面对偏执皇子齐旻的强取豪夺，她从最初的挣扎痛苦，到后来的清醒自救，始终守住自己的底线，不被情感绑架，不向强权妥协。她通透理智，看透了人性的复杂与乱世的残酷，从不轻易交付真心，却在樊长玉成长的路上默默相助，是樊长玉女性觉醒之路上的同行者。她的“逐玉”之路，是追逐女性的独立与自由，是摆脱世俗的束缚，是守护自己的人生与尊严，她用自己的方式证明，女性的价值从来不是由婚姻或他人定义的，而是由自己创造的。",
+        trait: ["本能：理性权衡，清醒独立，凡事以自我为先，不感情用事", "底线：不失去自我，不向强权妥协，守住自己的尊严与底线", "宿命：摆脱情感桎梏，专注于自我成长，活成自己的靠山", "软肋：看似冷漠通透，内心藏着对真诚感情的渴望，害怕真心被辜负"],
+        match: "你与齐旻的纠葛是原著中最具张力的情感线，他的偏执与强取豪夺，与你的清醒独立形成强烈碰撞，他是你的劫难，也是你成长的契机。原著中，你最终放下这段孽缘，专注于守护自己的商业版图与孩子，活成了自己想要的样子。你与樊长玉是彼此的知己，你们有着相似的清醒与坚韧，能相互理解、相互扶持。无需刻意迎合他人，你的独立与通透，本身就是一种光芒。"
+    },
+    {
+        name: "李怀安",
+        tag: "温润君子 · 清醒成全者",
+        desc: "你像李怀安，原著中“君子之玉”的代表，出身书香世家，才兼文武，温润如玉、清醒克制，打破了“男二必深情偏执”的刻板模板。他对樊长玉有着真挚的好感，却从未强求，始终保持着恰当的距离，在她需要时默默相助，在她与谢征生死相依时，选择体面放手、真诚成全。原著中，他不追逐儿女情长，更专注于家国大义与君子之风，在乱世中坚守自己的初心与底线，不随波逐流，不趋炎附势，就像一块温润的暖玉，不张扬，却自有力量。他的“逐玉”之路，是追逐内心的澄明与坦荡，是坚守君子之道，是守护家国安宁，他用自己的方式，诠释了“温柔不是懦弱，克制不是不爱”的深刻内涵。",
+        trait: ["本能：温润谦和，待人真诚，凡事换位思考，不与人争长短", "底线：坚守君子之道，不卑不亢，守住家国大义与内心澄明", "宿命：清醒克制的守护者，以成全为温柔，在乱世中守住初心", "软肋：过于隐忍克制，不善于表达自己的心意，容易被忽视"],
+        match: "你与樊长玉是灵魂契合的知己，你懂她的泼辣背后的柔软，她懂你的温润之下的坚守，却终究只能是彼此生命中的过客。原著中，你始终默默守护在樊长玉身边，看着她成长、蜕变，最终选择成全她与谢征，这份清醒与克制，是你最珍贵的品质。你无需一直委屈自己，偶尔的“自私”不是错，学会表达自己的心意，才能不留下遗憾。"
+    },
+    {
+        name: "齐姝",
+        tag: "骄傲风骨长公主 · 乱世清醒者",
+        desc: "你像齐姝，原著中出身皇室却不失风骨的长公主，自幼生长在深宫，见惯了朝堂的尔虞我诈与皇权的残酷博弈，却始终坚守自己的初心与底线，不卑不亢、清醒独立，从不依附任何人，也不向强权低头。她生在皇室却不染尘俗，骨子里的骄傲不允许自己向任何人妥协，哪怕身处困境、身陷囹圄，也会保持最后的体面，用自己的智慧与手腕，在乱世中站稳脚跟。她看透了权力的虚伪与冰冷，不贪恋荣华富贵，不追逐权倾朝野，只想要一份安稳与自由，想要守护自己在意的人。她的“逐玉”之路，是追逐风骨与尊严，是追逐不被束缚的自由，是在皇权博弈中守住自己的本心，她就像一块历经淬炼的寒玉，清冷却有力量，骄傲却不孤傲。",
+        trait: ["本能：保持体面，不卑不亢，遇事冷静清醒，绝不轻易低头", "底线：不丢风骨与尊严，不依附皇权与他人，守住自己的初心", "宿命：骄傲自持的长公主，在乱世皇权中挣扎，守住自己的一方天地", "软肋：内心深处渴望被理解、被尊重，却从不轻易展露脆弱"],
+        match: "你与公孙鄞是原著中最佳的盟友，他的智计卓绝能助你在皇权博弈中站稳脚跟，你的格局与风骨能让他的谋略发挥最大价值，你们彼此欣赏、相互成就，却始终保持着恰当的距离。原著中，你在乱世中坚守自己的底线，不与魏严之流同流合污，最终得以保全自身与在意的人。你需要学会放下部分骄傲，偶尔的示弱不是认输，而是给自己留一条退路，也是给身边人一个靠近你的机会。"
+    },
+    {
+        name: "魏严",
+        tag: "权欲熏心反派 · 野心囚徒",
+        desc: "你像魏严，原著中权倾朝野的宰相，也是谢征的舅父，更是十七年前锦州血案的幕后黑手，他是皇权博弈的棋子，也是自身野心与愧疚的囚徒。原著对他的塑造并非脸谱化的恶人，他的“恶”是权力的腐蚀，也是身不由己的无奈——他扶持小皇子、构陷忠良、制造灭门血案，看似权倾朝野、狠绝无情，实则始终活在“对不起妹妹”的愧疚中。他的“逐玉”之路，是追逐权倾朝野的野心，是想通过掌控权力，弥补自己内心的遗憾与愧疚，却最终被权力吞噬，沦为皇权的牺牲品，就像一块被权力污染的玉，最终失去了本真与初心。他的悲剧，源于野心的膨胀，也源于无法直面自己的愧疚与遗憾。",
+        trait: ["本能：算计布局，狠戾无情，唯利是图，凡事以权力为核心", "底线：权力至上，为了权力可以牺牲一切，包括亲情与良知", "宿命：权欲熏心的执棋人，最终被权力反噬，沦为乱世的牺牲品", "软肋：内心深处藏着对妹妹的愧疚，这是他唯一的软肋与良知"],
+        match: "你与谢征是原著中天生的对手，你们有着相似的谋算与隐忍，却有着截然不同的底线——他逐的是清白与救赎，你逐的是权力与野心。原著中，你最终被谢征与樊长玉联手扳倒，落得身败名裂的下场。如果你能放下部分权欲，直面自己的愧疚，不被权力吞噬，或许不会落得如此结局。权力从来不是救赎，守住良知与底线，才能避免被自己的野心反噬。"
+    },
+    {
+        name: "公孙鄞",
+        tag: "智计卓绝谋臣 · 忠诚守护者",
+        desc: "你像公孙鄞，原著中最可靠的谋士，温润儒雅、智计卓绝，天生具备谋臣的天赋，冷静、理性、通透，总能在复杂的朝堂权谋与乱世纷争中，找到最优破局之法。他没有权倾朝野的野心，也不贪恋功名利禄，只愿辅佐值得的人，一旦认定，便会忠心耿耿、鞠躬尽瘁，是藏在幕后的定海神针。原著中，他看透了乱世的残酷与人心的复杂，却始终坚守自己的忠诚与底线，不随波逐流，不趋炎附势，默默布局、暗中相助，辅佐谢征沉冤得雪、重掌兵权，也助力樊长玉成长为女将军。他习惯站在幕后，看着自己的布局一步步实现，这份成就感远胜过站在台前接受众人的追捧，他是别人最可靠的依靠，却常常忽略了自己的需求与情感。",
+        trait: ["本能：理性分析，精准布局，凡事深思熟虑，从不失误", "底线：忠于所托，绝不背叛信任自己的人，守住谋士的忠诚与底线", "宿命：忠诚可靠的幕后谋臣，辅佐明君、守护家国，实现自我价值", "软肋：过于理性克制，不善于表达自己的情感，容易忽略自己的内心需求"],
+        match: "你与谢征是原著中最佳的搭档，你的智计卓绝加上他的格局与隐忍，能成就一番大业，你辅佐他沉冤得雪、执掌兵权，他信任你、倚重你，成为你最坚实的后盾。你与齐姝也能惺惺相惜，彼此欣赏对方的清醒与理智，成为乱世中最可靠的盟友。你需要学会为自己活一次，不必永远做别人的配角，偶尔释放自己的情感，才能真正找到属于自己的价值与归宿。"
+    },
+    {
+        name: "齐旻",
+        tag: "偏执疯批皇子 · 为爱痴狂者",
+        desc: "你像齐旻，原著中偏执又深情的皇子，从小活在不被重视的环境里，内心孤独、极度缺爱，对“偏爱”有着极致的渴望，这也造就了他偏执疯批的性格。他的世界里非黑即白，一旦爱上一个人，就会把对方当成自己的全世界，想要牢牢抓在手里，这份爱太过浓烈、太过偏执，常常会吓到对方，却又控制不住自己。原著中，他对俞浅浅有着近乎疯狂的执念，从强取豪夺到默默守护，从偏执占有到最终放手，他的一生都在追逐“被偏爱”的感觉，却始终没能明白，爱不是占有，而是成全。他的“逐玉”之路，是追逐一份专属的偏爱，是摆脱内心的孤独，却最终在偏执中迷失自己，沦为爱意的囚徒。",
+        trait: ["本能：偏执占有，为爱疯魔，不计后果，凡事以所爱之人为主", "底线：所爱之人不能被分享，宁毁不赠，绝不允许别人抢走自己在意的人", "宿命：执念成殇的疯批皇子，在爱意中挣扎，最终学会放手与成全", "软肋：害怕被抛弃、不被偏爱，内心深处藏着极度的孤独与不安"],
+        match: "你对俞浅浅的执念，是原著中最令人唏嘘的情感线，她的清醒独立与你的偏执疯魔形成强烈碰撞，她是你的劫难，也是你的救赎。原著中，你最终学会放手，看着俞浅浅活成自己想要的样子，这份放手不是妥协，而是你成长的开始。你需要学会克制自己的偏执，明白爱不是占有，而是尊重与成全，只有放下执念，才能摆脱孤独的桎梏，找到属于自己的温暖与归宿。"
+    },
+    {
+        name: "随元青",
+        tag: "悍勇坦荡悍将 · 真性情者",
+        desc: "你像随元青，原著中快意恩仇的悍将，直率悍勇、坦荡纯粹，从不玩阴的、不搞算计，一切都摆在明面上，讨厌虚伪、厌恶圆滑，喜欢用最直接的方式解决问题。他重情重义、极度护短，认可的人就掏心掏肺、两肋插刀，不认可的人就直接硬刚、绝不妥协，活得坦坦荡荡、光明磊落。原著中，他出身行伍，武力值出众，不贪恋权势，不追求荣华，只想要简单快乐、兄弟相伴，哪怕前路坎坷、战火纷飞，也会笑着面对，因为他知道，只要身边有兄弟，就什么都不怕。他的“逐玉”之路，是追逐快意恩仇的人生，是守护兄弟情义，是活成自己想要的样子，他就像一束光，纯粹又热烈，照亮身边的人。",
+        trait: ["本能：直接硬刚，快意恩仇，从不藏私，遇事敢冲敢闯", "底线：不背叛兄弟，不欺负弱小，守住自己的情义与本心", "宿命：坦荡纯粹的悍将，在乱世中坚守情义，活成自己想要的模样", "软肋：容易被兄弟情义牵绊，偶尔会因冲动行事，忽略利弊权衡"],
+        match: "你与樊长玉是原著中相见恨晚的知己，你们有着相似的直爽与护短，有着相似的真性情，能一起并肩作战、一起守护在意的人，彼此欣赏、彼此扶持。你需要学会偶尔收敛自己的脾气，遇事多几分冷静与思考，用智慧而非蛮力解决问题，这样才能在乱世中走得更远，也才能更好地守护自己的兄弟与初心。"
+    }
+];
+
+// 全局变量
+let currentQ = 0; // 当前题目索引
+let scores = { A: 0, B: 0, C: 0, D: 0 }; // 选项得分
+
+// 选择选项
+function selectOption(opt) {
+    // 记录得分
+    scores[opt]++;
+    
+    // 下一题
+    currentQ++;
+    if (currentQ < questions.length) {
+        updateQuestion();
+    } else {
+        // 答题完成，计算结果
+        showResult();
+    }
+}
+
+// 更新题目
+function updateQuestion() {
+    document.getElementById("questionNum").innerText = `第 ${currentQ + 1} 题 / 共 30 题`;
+    document.getElementById("questionText").innerText = questions[currentQ].text;
+    
+    // 更新选项文字
+    const btns = document.querySelectorAll(".option-btn");
+    btns.forEach(btn => {
+        const opt = btn.getAttribute("onclick").split("'")[1]; // 获取选项A/B/C/D
+        btn.innerText = `${opt}. ${questions[currentQ].options[opt]}`;
+    });
+}
+
+// 计算并显示结果 - 贴合原著文案，保留空两格
+function showResult() {
+    // 隐藏答题区，显示结果区
+    document.getElementById("questionBox").style.display = "none";
+    document.getElementById("resultBox").style.display = "block";
+
+    // 计算最高分选项
+    let maxScore = 0;
+    let maxOpt = "A";
+    for (let opt in scores) {
+        if (scores[opt] > maxScore) {
+            maxScore = scores[opt];
+            maxOpt = opt;
+        }
+    }
+
+    // 匹配角色（按选项+得分细分，贴合原著人设）
+    let charIndex = 0;
+    switch(maxOpt) {
+        case "A":
+            charIndex = scores.A >= 10 ? 8 : 0; // A高=随元青，次高=樊长玉（贴合原著双强设定）
+            break;
+        case "B":
+            if (scores.B >= 12) charIndex = 5; // B极高=魏严（权欲巅峰）
+            else if (scores.B >= 8) charIndex = 1; // B高=谢征（隐忍腹黑）
+            else charIndex = 6; // B次高=公孙鄞（智计谋臣）
+            break;
+        case "C":
+            charIndex = scores.C >= 9 ? 4 : 2; // C高=齐姝（骄傲风骨），次高=俞浅浅（清醒独立）
+            break;
+        case "D":
+            charIndex = scores.D >= 10 ? 7 : 3; // D高=齐旻（偏执疯批），次高=李怀安（温润君子）
+            break;
+    }
+
+    // 填充结果内容（贴合原著，保留换行和空两格）
+    const char = characters[charIndex];
+    document.getElementById("resultName").innerText = `你是《逐玉》中的：${char.name}`;
+    document.getElementById("resultTag").innerText = char.tag;
+    document.getElementById("resultDesc").innerText = char.desc; // 保留空两格，贴合中文阅读习惯
+    
+    // 填充特质列表
+    const traitList = document.getElementById("resultTrait");
+    traitList.innerHTML = "";
+    char.trait.forEach(trait => {
+        const li = document.createElement("li");
+        li.innerText = trait;
+        traitList.appendChild(li);
+    });
+
+    // 填充角色适配建议（贴合原著剧情）
+    document.getElementById("resultMatch").innerText = char.match;
+}
+
+// 重新测试
+function restartTest() {
+    // 重置变量
+    currentQ = 0;
+    scores = { A: 0, B: 0, C: 0, D: 0 };
+    
+    // 显示答题区，隐藏结果区
+    document.getElementById("resultBox").style.display = "none";
+    document.getElementById("questionBox").style.display = "block";
+    
+    // 重置第一题
+    updateQuestion();
+}
+</script>
+</body>
+</html>
